@@ -10,7 +10,7 @@ contain keys to the other boxes.
 def canUnlockAll(boxes):
     """
      a method that determines if all the boxes can be opened.
-     
+
     :param boxes:
     :return: True or False
     """
