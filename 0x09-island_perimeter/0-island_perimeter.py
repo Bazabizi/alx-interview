@@ -9,22 +9,9 @@ def island_perimeter(grid):
     :param grid:
     :return:
     """
-    rows = len(grid)
-    cols = len(grid[0])
+    area = 0
+    for row in grid + list(map(list, zip(*grid))):
+        for i1, i2 in zip([0] + row, row + [0]):
+            area += int(i1 != i2)
+    return area
 
-    perimeter = 0
-    for row in range(rows):
-        for col in range(cols):
-            if grid[row][col] == 1:
-                adjacent = 0
-                if row > 0 and grid[row-1][col] == 1:
-                    adjacent += 1
-                if row < rows-1 and grid[row+1][col] == 1:
-                    adjacent += 1
-                if col > 0 and grid[row][col-1] == 1:
-                    adjacent += 1
-                if col < cols-1 and grid[row][col+1] == 1:
-                    adjacent += 1
-                
-                perimeter += 4 - adjacent
-    return perimeter
