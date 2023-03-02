@@ -4,19 +4,13 @@ Island Perimeter
 """
 
 def island_perimeter(grid):
-    rows, cols = len(grid), len(grid[0])
-    perimeter = 0
-    for row in range(rows):
-        for col in range(cols):
-            if grid[row][col] == 1:
-                # Count top and bottom neighbors
-                if row == 0 or grid[row-1][col] == 0:
-                    perimeter += 1
-                if row == rows-1 or grid[row+1][col] == 0:
-                    perimeter += 1
-                # Count left and right neighbors
-                if col == 0 or grid[row][col-1] == 0:
-                    perimeter += 1
-                if col == cols-1 or grid[row][col+1] == 0:
-                    perimeter += 1
-    return perimeter
+    """
+     returns the perimeter of the island described in grid
+    :param grid:
+    :return:
+    """
+    area = 0
+    for row in grid + list(map(list, zip(*grid))):
+        for i1, i2 in zip([0] + row, row + [0]):
+            area += int(i1 != i2)
+    return area
