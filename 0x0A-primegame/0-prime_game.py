@@ -9,65 +9,70 @@ def findMultiples(num, targets):
     Finds multiples of a given number within a list
     """
     for i in targets:
-      def isWinner(x, nums):
-    # function to generate list of primes up to n
-    def generatePrimes(n):
-        sieve = [True] * (n+1)
-        sieve[0] = sieve[1] = False
-        for i in range(2, int(n**0.5)+1):
-            if sieve[i]:
-                for j in range(i*i, n+1, i):
-                    sieve[j] = False
-        return [i for i in range(n+1) if sieve[i]]
+        if i % num == 0:
+            targets.remove(i)
+    return targets
 
-    # initialize variables to keep track of wins
-    maria_wins = 0
-    ben_wins = 0
 
-    # simulate the game for each round
-    for i in range(x):
-        n = nums[i]
-        primes = generatePrimes(n)
-        maria_moves = 0
-        ben_moves = 0
-        while primes:
-            # Maria's turn
-            if maria_moves == ben_moves:
-                # find the largest prime that is still in the list
-                p = None
-                for prime in reversed(primes):
-                    if prime is not None:
-                        p = prime
-                        break
-                if p is None:
-                    # no primes left, Ben wins
-                    ben_wins += 1
-                    break
-                # remove p and its multiples from the list
-                for i in range(p, n+1, p):
-                    primes[i-1] = None
-                maria_moves += 1
-            # Ben's turn
-            else:
-                # find the largest prime that is still in the list
-                p = None
-                for prime in reversed(primes):
-                    if prime is not None:
-                        p = prime
-                        break
-                if p is None:
-                    # no primes left, Maria wins
-                    maria_wins += 1
-                    break
-                # remove p and its multiples from the list
-                for i in range(p, n+1, p):
-                    primes[i-1] = None
-                ben_moves += 1
+def isPrime(i):
+    """
+    Check if a number is prime.
+    """
+    if i == 1:
+        return False
+    for j in range(2, i):
+        if i % j == 0:
+            return False
+    return True
 
-    # determine the winner
-    if maria_wins > ben_wins:
-        return "Maria"
-    elif ben_wins > maria_wins:
-        return "Ben"
+
+def findPrimes(n):
+    """
+    Dispatch a given set into prime numbers and non-prime numbers.
+    """
+    counter = 0
+    target = list(n)
+    for i in range(1, len(target) + 1):
+        if isPrime(i):
+            counter += 1
+            target.remove(i)
+            target = findMultiples(i, target)
+        else:
+            pass
+    return counter
+
+
+def isWinner(x, nums):
+    """
+    Maria and Ben are playing a game.Given a set of consecutive integers
+    starting from 1 up to and including n, they take turns choosing a
+    prime number from the set and removing that number and its
+    multiples from the set.
+    The player that cannot make a move loses the game.
+
+    They play x rounds of the game, where n may be different for each round.
+    Assuming Maria always goes first and both players play optimally,
+    determine who the winner of each game is.
+    """
+    players = {'Maria': 0, 'Ben': 0}
+    cluster = set()
+    for elem in range(x):
+        nums.sort()
+        num = nums[elem]
+        for i in range(1, num + 1):
+            cluster.add(i)
+            if i == num + 1:
+                break
+        temp = findPrimes(cluster)
+
+        if temp % 2 == 0:
+            players['Ben'] += 1
+        elif temp % 2 != 0:
+            players['Maria'] += 1
+
+    if players['Maria'] > players['Ben']:
+        return 'Maria'
+    elif players['Maria'] < players['Ben']:
+        return 'Ben'
     else:
         return None
